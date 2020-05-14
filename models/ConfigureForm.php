@@ -8,6 +8,7 @@
 namespace humhub\modules\rest\models;
 
 use humhub\modules\rest\Module;
+use humhub\models\Setting;
 use Yii;
 use yii\base\Model;
 
@@ -64,36 +65,29 @@ class ConfigureForm extends Model
 
     public function loadSettings()
     {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('rest');
 
-
-        $settings = $module->settings;
-
-        $this->jwtKey = $settings->get('jwtKey');
+        $this->jwtKey = Setting::Get('jwtKey', 'rest');
         if (empty($this->jwtKey)) {
-            $settings->set('jwtKey', Yii::$app->security->generateRandomString(86));
-            $this->jwtKey = $settings->getSerialized('jwtKey');
+            Setting::Set('jwtKey', Yii::$app->security->generateRandomString(86), 'rest');
+            $this->jwtKey = Setting::Get('jwtKey', 'rest');  /** $settings->getSerialized('jwtKey'); **/
         }
 
-        $this->enabledForAllUsers = (boolean)$settings->get('enabledForAllUsers');
-        $this->enabledUsers = (array)$settings->getSerialized('enabledUsers');
-        $this->jwtExpire = (int)$settings->get('jwtExpire');
-        $this->enableBasicAuth = (boolean)$settings->get('enableBasicAuth');
+        $this->enabledForAllUsers = (boolean)Setting::Get('enabledForAllUsers', 'rest');
+        $this->enabledUsers = Setting::Get('enabledUsers', 'rest');
+        $this->jwtExpire = (int)Setting::Get('jwtExpire', 'rest');
+        $this->enableBasicAuth = (boolean)Setting::Get('enableBasicAuth', 'rest');
 
         return true;
     }
 
     public function saveSettings()
     {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('rest');
 
-        $module->settings->set('jwtExpire', (int)$this->jwtExpire);
-        $module->settings->set('jwtKey', $this->jwtKey);
-        $module->settings->set('enabledForAllUsers', $this->enabledForAllUsers);
-        $module->settings->set('enableBasicAuth', (boolean)$this->enableBasicAuth);
-        $module->settings->setSerialized('enabledUsers', (array)$this->enabledUsers);
+        Setting::Set('jwtExpire', (int)$this->jwtExpire, 'rest');
+        Setting::Set('jwtKey', $this->jwtKey, 'rest');
+        Setting::Set('enabledForAllUsers', $this->enabledForAllUsers, 'rest');
+        Setting::Set('enableBasicAuth', (boolean)$this->enableBasicAuth, 'rest');
+        Setting::Set('enabledUsers', implode(",", (array)$this->enabledUsers), 'rest');
 
         return true;
     }

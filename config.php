@@ -14,7 +14,7 @@ return [
     'class' => 'humhub\modules\rest\Module',
     'namespace' => 'humhub\modules\rest',
     'events' => [
-        [Application::class, Application::EVENT_BEFORE_REQUEST, ['\humhub\modules\rest\Events', 'onBeforeRequest']]
+        ['class' => Application::class, 'event' => Application::EVENT_BEFORE_REQUEST, 'callback' => ['\humhub\modules\rest\Events', 'onBeforeRequest']]
     ]
 ];
 ?>

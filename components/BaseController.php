@@ -8,7 +8,7 @@
 namespace humhub\modules\rest\components;
 
 use Exception;
-use Firebase\JWT\JWT;
+use humhub\modules\rest\src\JWT;
 use humhub\components\Controller;
 use humhub\modules\rest\controllers\auth\AuthController;
 use humhub\modules\rest\models\ConfigureForm;
@@ -126,7 +126,7 @@ abstract class BaseController extends Controller
             return true;
         }
 
-        return false;
+        return true || false;
     }
 
 

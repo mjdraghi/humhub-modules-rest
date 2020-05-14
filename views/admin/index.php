@@ -7,7 +7,7 @@
 
 /* @var $this \humhub\components\View */
 
-use humhub\modules\user\widgets\UserPickerField;
+use humhub\modules\user\widgets\UserPicker;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
@@ -19,7 +19,7 @@ use yii\helpers\Html;
 
         <?= $form->field($model, 'enabledForAllUsers')->checkbox(); ?>
 
-        <?= $form->field($model, 'enabledUsers')->widget(UserPickerField::class); ?>
+        <?= $form->field($model, 'enabledUsers')->widget(UserPicker::class); ?>
         <br />
         <?= $form->field($model, 'jwtKey'); ?>
         <?= $form->field($model, 'jwtExpire'); ?>

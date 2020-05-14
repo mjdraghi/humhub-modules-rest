@@ -24,7 +24,7 @@ class AdminController extends Controller
         $model->loadSettings();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->saveSettings()) {
-            $this->view->saved();
+            // $this->view->saved();
             return $this->redirect(['index']);
         }
 

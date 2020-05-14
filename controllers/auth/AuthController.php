@@ -7,12 +7,12 @@
 
 namespace humhub\modules\rest\controllers\auth;
 
-use Firebase\JWT\JWT;
+use humhub\modules\rest\src\JWT;
 use humhub\modules\rest\components\BaseController;
 use humhub\modules\rest\models\ConfigureForm;
-use humhub\modules\user\authclient\AuthClientHelpers;
-use humhub\modules\user\models\forms\Login;
+use humhub\modules\user\models\forms\AccountLogin;
 use humhub\modules\user\models\User;
+use humhub\models\Setting;
 use Yii;
 
 class AuthController extends BaseController
@@ -33,7 +33,7 @@ class AuthController extends BaseController
         $issuedAt = time();
         $data = [
             'iat' => $issuedAt,
-            'iss' => Yii::$app->settings->get('baseUrl'),
+            'iss' => Setting::get('baseUrl'),
             'nbf' => $issuedAt,
             'uid' => $user->id,
             'email' => $user->email
@@ -55,12 +55,11 @@ class AuthController extends BaseController
 
     public static function authByUserAndPassword($username, $password)
     {
-        $login = new Login;
-        if (!$login->load(['username' => $username, 'password' => $password], '') || !$login->validate()) {
+        $login = new AccountLogin;
+        if (!$login->load(['username' => $username, 'password' => $password, 'rememberMe' => false], '') || !$login->validate()) {
             return null;
         }
 
-        $user = AuthClientHelpers::getUserByAuthClient($login->authClient);
-        return $user;
+        return $login->getUser();
     }
 }

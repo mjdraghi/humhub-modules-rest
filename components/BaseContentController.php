@@ -16,6 +16,7 @@ use humhub\modules\file\models\File;
 use humhub\modules\file\models\FileUpload;
 use humhub\modules\rest\controllers\task\TaskController;
 use humhub\modules\rest\definitions\ContentDefinitions;
+use humhub\modules\rest\src\JWT;
 use Yii;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
