@@ -38,6 +38,9 @@ class Events
             ['pattern' => 'api/v1/user/full/<id:\d+>', 'route' => 'rest/user/user/hard-delete', 'verb' => ['DELETE']],
             ['pattern' => 'api/v1/user/', 'route' => 'rest/user/user/create', 'verb' => 'POST'],
 
+
+            /**************************************************************************************************************************
+
             // User: Group Controller
             ['pattern' => 'api/v1/user/group', 'route' => 'rest/user/group/index', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'api/v1/user/group', 'route' => 'rest/user/group/create', 'verb' => 'POST'],
@@ -115,7 +118,9 @@ class Events
             ['pattern' => 'api/v1/notification/', 'route' => 'rest/notification/notification/index', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'api/v1/notification/unseen/', 'route' => 'rest/notification/notification/unseen', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'api/v1/notification/mark-as-seen/', 'route' => 'rest/notification/notification/mark-as-seen', 'verb' => ['PATCH']],
-            ['pattern' => 'api/v1/notification/<id:\d+>', 'route' => 'rest/notification/notification/view', 'verb' => ['GET', 'HEAD']],
+            ['pattern' => 'api/v1/notification/<id:\d+>', 'route' => 'rest/notification/notification/view', 'verb' => ['GET', 'HEAD']], 
+
+            ******************************************************************************************************************************/
 
             // File
             ['pattern' => 'api/v1/file/download/<id:\d+>', 'route' => 'rest/file/file/download', 'verb' => ['GET', 'HEAD']],

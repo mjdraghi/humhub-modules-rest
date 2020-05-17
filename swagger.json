@@ -1,0 +1,938 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Welcome to the HumHub user module API reference.\n\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->",
+    "version": "1.0.0",
+    "title": "HumHub - User API",
+    "contact": {
+      "email": "info@humhub.com"
+    },
+    "license": {
+      "name": "AGPLv2",
+      "url": "https://www.humhub.org/en/licences"
+    }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "API to access and manage user information.",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://docs.humhub.org"
+      }
+    },
+    {
+      "name": "Group",
+      "description": "Group API"
+    },
+    {
+      "name": "Invite",
+      "description": "Invite new users to the HumHub installation"
+    },
+    {
+      "name": "Session",
+      "description": "User sessions"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Find all users",
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page1"
+          },
+          {
+            "$ref": "#/components/parameters/limit1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add a new user to the installation",
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "account",
+                  "profile",
+                  "password"
+                ],
+                "properties": {
+                  "account": {
+                    "$ref": "#/components/schemas/Account"
+                  },
+                  "profile": {
+                    "$ref": "#/components/schemas/Profile"
+                  },
+                  "password": {
+                    "$ref": "#/components/schemas/Password"
+                  }
+                }
+              }
+            }
+          },
+          "description": "User object to be added to the installation",
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by user id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update an existing user",
+        "description": "",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "$ref": "#/components/schemas/Account"
+                  },
+                  "profile": {
+                    "$ref": "#/components/schemas/Profile"
+                  },
+                  "password": {
+                    "$ref": "#/components/schemas/Password"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Updated user object",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation, the updated user record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Soft deletes an user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/user/full/{id}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Hard deletes an user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/user/group": {
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Find all Groups",
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page1"
+          },
+          {
+            "$ref": "#/components/parameters/limit1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Group"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Group"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Adds a new group",
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          },
+          "description": "The added Group object",
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/user/group/{id}": {
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Get group by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of group",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid group id supplied"
+          },
+          "404": {
+            "description": "Group not found"
+          }
+        },
+        "put": {
+          "tags": [
+            "Group"
+          ],
+          "summary": "Update a group",
+          "description": "",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The id of group",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated group object",
+              "required": true,
+              "schema": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation, the updated group record",
+              "schema": {
+                "$ref": "#/components/schemas/Group"
+              }
+            },
+            "400": {
+              "description": "Invalid group supplied"
+            },
+            "404": {
+              "description": "Group not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Group"
+          ],
+          "summary": "Deletes a group by id",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The id of group",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation"
+            },
+            "400": {
+              "description": "Invalid group id supplied"
+            },
+            "404": {
+              "description": "Group not found"
+            }
+          }
+        }
+      }
+    },
+    "/user/group/{id}/member": {
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "List members",
+        "description": "Lists all members of the given group id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the group",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserShort"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "$ref": "#/components/schemas/schema1"
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/schema2"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserShort"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Group not found"
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Group not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Add a new member",
+        "description": "Adds new member to the given group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of group",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isManager",
+            "description": "Is group manager",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "Removes a member",
+        "description": "Removes a member from given group id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of group",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/user/session/all/{id}": {
+      "delete": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Deletes all sessions for a particular user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of user",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "components": {
+    "parameters": {
+      "page1": {
+        "in": "query",
+        "name": "page",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minimum": 0
+        },
+        "description": "The number of page of the result set."
+      },
+      "limit1": {
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20
+        },
+        "description": "The numbers of items to return per page."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "JWT",
+        "name": "Authorization",
+        "in": "header"
+      },
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "UserShort": {
+        "description": "a short representation of the user",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "example": 14
+          },
+          "guid": {
+            "type": "string",
+            "readOnly": true,
+            "example": "cd081891-d2e2-40d5-84a4-b47309e71c80"
+          },
+          "displayname": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "url": {
+            "type": "string",
+            "example": "http://localhost/p/humhub/master/u/j.doe/"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "example": 14
+          },
+          "guid": {
+            "type": "string",
+            "readOnly": true,
+            "example": "cd081891-d2e2-40d5-84a4-b47309e71c80"
+          },
+          "displayname": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "url": {
+            "type": "string",
+            "example": "http://localhost/p/humhub/master/u/j.doe/"
+          },
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "example": 14
+          },
+          "guid": {
+            "type": "string",
+            "readOnly": true,
+            "example": "cd081891-d2e2-40d5-84a4-b47309e71c80"
+          },
+          "username": {
+            "type": "string",
+            "example": "john.doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "tags": {
+            "type": "string",
+            "example": "Administration, Support, HumHub",
+            "readOnly": true
+          },
+          "language": {
+            "type": "string",
+            "example": "DE",
+            "readOnly": true
+          },
+          "time_zone": {
+            "type": "string",
+            "example": "Europe/Paris",
+            "readOnly": true
+          },
+          "visibility": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          }
+        },
+        "xml": {
+          "name": "Account"
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastname": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "title": {
+            "type": "string",
+            "example": "Test user"
+          },
+          "gender": {
+            "type": "string",
+            "example": "male"
+          },
+          "street": {
+            "type": "string",
+            "example": "New Street 5"
+          },
+          "city": {
+            "type": "string",
+            "example": "Munich"
+          },
+          "zip": {
+            "type": "string",
+            "example": 80331
+          },
+          "country": {
+            "type": "string",
+            "example": "DE (ISO 3166 code)"
+          }
+        },
+        "xml": {
+          "name": "Profile"
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Example group"
+          },
+          "description": {
+            "type": "string",
+            "example": "Users of Example"
+          },
+          "show_at_directory": {
+            "type": "boolean",
+            "example": false
+          },
+          "show_at_registration": {
+            "type": "boolean",
+            "example": false
+          },
+          "space_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "sort_order": {
+            "type": "int",
+            "example": 100
+          }
+        },
+        "xml": {
+          "name": "Group"
+        }
+      },
+      "Password": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "example": "SuperSecretPassword"
+          }
+        },
+        "xml": {
+          "name": "Password"
+        }
+      },
+      "schema1": {
+        "type": "integer",
+        "format": "int64",
+        "example": 76
+      },
+      "schema2": {
+        "type": "integer",
+        "format": "int64",
+        "example": 1
+      }
+    }
+  }
+}
