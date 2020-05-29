@@ -10,6 +10,7 @@ namespace humhub\modules\rest\controllers\user;
 use humhub\modules\rest\components\BaseController;
 use humhub\modules\rest\definitions\UserDefinitions;
 use humhub\modules\space\models\Membership;
+use humhub\modules\space\models\Space;
 use humhub\modules\user\models\Password;
 use humhub\modules\user\models\Profile;
 use humhub\modules\user\models\Group;
@@ -112,6 +113,25 @@ class UserController extends BaseController
         return $this->actionView($user->id);
     }
 
+    private function isValidCourseIds($course_ids){
+        foreach ($course_ids as $key => $course_id) {
+            $course = Space::findOne(['id'=>$course_id]);
+
+            if ($course == null) {
+                return $course_id;
+            }
+        }
+        return false;
+    }
+
+    private function addToCourses($user_id, $course_ids){
+        foreach ($course_ids as $key => $course_id) {
+            $course = Space::findOne(['id'=>$course_id]);
+            if (!$course->isMember($user_id)){
+                $course->addMember($user_id);
+            }
+        }
+    }
 
     /**
      *
@@ -124,6 +144,15 @@ class UserController extends BaseController
         $group = Group::findOne(['id' => $group_id]);
         if ($group === null) {
             return $this->returnError(404, 'Group "'.$group_id.'" not found!');
+        }
+
+        $course_ids = Yii::$app->request->getBodyParam("course_ids", '');
+        $course_ids = explode(",", trim($course_ids));
+        if ($course_ids) {
+            $invalid_course_id = $this->isValidCourseIds($course_ids);
+            if ($invalid_course_id){
+                return $this->returnError(404, 'Course "'.$invalid_course_id.'" not found!');
+            }
         }
 
         $user = new User();
@@ -157,6 +186,7 @@ class UserController extends BaseController
             $password->user_id = $user->id;
             $password->setPassword($password->newPassword);
             if ($profile->save() && $password->save()) {
+                $this->addToCourses($user->id, $course_ids);
                 $this->sendEmailNotification($user, $password->newPassword);
                 return $this->actionView($user->id);
             }
